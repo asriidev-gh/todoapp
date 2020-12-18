@@ -1,16 +1,21 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import { todos } from './redux/todos/todo.reducer';
+import { todos, isLoading } from './redux/todos/todo.reducer';
 
 // Libraries that kept the state even the browser refresh
 import { persistReducer } from "redux-persist";
 import storage from  "redux-persist/lib/storage";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
+// Import thunk libraries
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
+
 // Redux Logger
 import logger from "redux-logger";
 
 const reducers = {
     todos,
+    isLoading
 };
 
 //1.) combines all actions response and state of our app
@@ -28,7 +33,10 @@ const persistedReducer = persistReducer(persistConfig,rootReducer);
 
 export const configureStore = () => createStore(
     persistedReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__(),
+    composeWithDevTools(
+        applyMiddleware(thunk)
+    ),
+    // window.__REDUX_DEVTOOLS_EXTENSION__ &&
+    // window.__REDUX_DEVTOOLS_EXTENSION__(),
     // applyMiddleware(logger)
 );
