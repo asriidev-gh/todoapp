@@ -3,7 +3,7 @@ import { loadTodosInProgress,
          loadTodosFailure, 
          createTodo,
          removeTodo,
-         markTodoAsCompleted } from "../redux/todos/todo.actions"
+         markTodoAsCompleted } from "./todo.actions"
 
 export const loadTodos = () => async(dispatch,getState) => {
     // dispatch can exucute state or functions

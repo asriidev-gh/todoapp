@@ -4,15 +4,18 @@ import NewTodoForm from "./NewTodoForm";
 import TodoListItem from "./TodoListItem";
 import "./TodoList.css";
 
-import { loadTodos, removeTodoRequest, markTodoAsCompletedRequest } from "./thunks";
+import { loadTodos, removeTodoRequest, markTodoAsCompletedRequest } from "../redux/todos/todo.thunks";
+
+import { getCompletedTodos, getIncompleteTodos, getTodos, getTodosLoading } from "../redux/todos/todo.selectors";
 
 const TodoList = ({ todos = [], 
                     onRemovePressed, 
                     onCompletedPressed, 
-                    onIncompletePressed, 
-                    onDisplayAlertClicked,
+                    onIncompletePressed,                     
                     isLoading,
-                    startLoadingTodos
+                    startLoadingTodos,
+                    completedTodos,
+                    incompleteTodos
                  }) => {
                     
   useEffect(() => {
@@ -23,7 +26,19 @@ const TodoList = ({ todos = [],
   const content = (
   <div className="list-wrapper">
         <NewTodoForm />
-        {todos.map((todo) => (<TodoListItem todo={todo} 
+        <h3>Incomplete:</h3>
+        {incompleteTodos.map((todo) => (<TodoListItem
+                                key={todo.id}
+                                todo={todo}                                
+                                onCompletedPressed={onCompletedPressed}                                
+                                onRemovePressed={onRemovePressed}
+                                onIncompletePressed={onIncompletePressed}
+                                />))}
+        
+        <h3>Complete:</h3>
+        {completedTodos.map((todo) => (<TodoListItem
+                                key={todo.id}
+                                todo={todo}                                
                                 onCompletedPressed={onCompletedPressed}                                
                                 onRemovePressed={onRemovePressed}
                                 onIncompletePressed={onIncompletePressed}
@@ -34,8 +49,10 @@ const TodoList = ({ todos = [],
 };
 
 const mapStateToProps = (state) => ({
-    isLoading: state.isLoading,//current state of isLoading reducer
-    todos: state.todos
+    isLoading: getTodosLoading(state),//current state of isLoading reducer, by using selector we may manage state
+    todos: getTodos(state),
+    completedTodos: getCompletedTodos(state),//to make separate list 
+    incompleteTodos: getIncompleteTodos(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -43,8 +60,7 @@ const mapDispatchToProps = (dispatch) => ({
     onRemovePressed: (id) => dispatch(removeTodoRequest(id)),
     // onCompletedPressed: (text) => dispatch(markTodoAsCompleted(text)),
     onCompletedPressed: (id) => dispatch(markTodoAsCompletedRequest(id)),
-    onIncompletePressed: (text) => dispatch(markTodoAsIncomplete(text)),
-    onDisplayAlertClicked: (text) => dispatch(displayAlert(text)),
+    onIncompletePressed: (text) => dispatch(markTodoAsIncomplete(text)),    
     startLoadingTodos: () => dispatch(loadTodos()),
 });
 

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 // import { createTodo } from "../redux/todos/todo.actions";
-import { addTodoRequest } from "./thunks";
+import { addTodoRequest } from "../redux/todos/todo.thunks";
 import "./NewTodoForm.css";
+
+import { getTodos } from "../redux/todos/todo.selectors";
 
 const NewTodoForm = ({ todos, onCreatePressed }) => {
     const [inputValue, setInputValue] = useState("");
@@ -40,7 +42,7 @@ const NewTodoForm = ({ todos, onCreatePressed }) => {
 // then since we connect mapStateToProps in our NewTodoForm
 // we will have access to todos object that we can pass on the NewTodoForm({todo})
 const mapStateToProps = (state) => ({
-    todos: state.todos
+    todos: getTodos(state)
 });
 
 // dispatch allows us to trigger any event from our actions
