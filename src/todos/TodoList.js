@@ -2,11 +2,22 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import NewTodoForm from "./NewTodoForm";
 import TodoListItem from "./TodoListItem";
-import "./TodoList.css";
+import styled from "styled-components";
 
-import { loadTodos, removeTodoRequest, markTodoAsCompletedRequest } from "../redux/todos/todo.thunks";
+const ListWrapper = styled.div`
+  max-width: 700px;
+  margin: auto;
+`;
 
-import { getCompletedTodos, getIncompleteTodos, getTodos, getTodosLoading } from "../redux/todos/todo.selectors";
+import { loadTodos, 
+         removeTodoRequest, 
+         markTodoAsCompletedRequest 
+       } from "../redux/todos/todo.thunks";
+
+import { getCompletedTodos, 
+         getIncompleteTodos,          
+         getTodosLoading 
+        } from "../redux/todos/todo.selectors";
 
 const TodoList = ({ todos = [], 
                     onRemovePressed, 
@@ -24,7 +35,7 @@ const TodoList = ({ todos = [],
 
   const loadingMessage = "Loading todos..";
   const content = (
-  <div className="list-wrapper">
+  <ListWrapper>
         <NewTodoForm />
         <h3>Incomplete:</h3>
         {incompleteTodos.map((todo) => (<TodoListItem
@@ -43,14 +54,14 @@ const TodoList = ({ todos = [],
                                 onRemovePressed={onRemovePressed}
                                 onIncompletePressed={onIncompletePressed}
                                 />))}
-  </div>
+  </ListWrapper>
   );
     return isLoading ? loadingMessage : content;
 };
 
 const mapStateToProps = (state) => ({
     isLoading: getTodosLoading(state),//current state of isLoading reducer, by using selector we may manage state
-    todos: getTodos(state),
+    // todos: getTodos(state),
     completedTodos: getCompletedTodos(state),//to make separate list 
     incompleteTodos: getIncompleteTodos(state),
 });
